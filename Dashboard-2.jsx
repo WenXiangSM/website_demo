@@ -106,7 +106,7 @@ export default function Dashboard({ onNavigate }) {
       <div className="page-header">
         <div className="page-header-row">
           <div>
-            <h1>Tax Dashboard</h1>
+            <h1>Tax Dashboardd</h1>
             <p>YA 2026 · Last synced with SGFinDex 2 hours ago</p>
           </div>
           <div style={{ display: 'flex', gap: 10 }}>
