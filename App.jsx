@@ -20,6 +20,7 @@ export default function App() {
   const [authPage, setAuthPage] = useState('login'); // 'login' | 'signup'
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [activePage, setActivePage] = useState('dashboard');
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   if (!isLoggedIn) {
     if (authPage === 'signup') {
@@ -49,9 +50,28 @@ export default function App() {
     }
   };
 
+  const handleNavClick = (id) => {
+    setActivePage(id);
+    setSidebarOpen(false);
+  };
+
   return (
     <div className="app">
-      <aside className="sidebar">
+      {/* Mobile top bar */}
+      <header className="mobile-header">
+        <button className="hamburger" onClick={() => setSidebarOpen(true)} aria-label="Open menu">
+          <span /><span /><span />
+        </button>
+        <span className="mobile-brand">TaxSG</span>
+        <div style={{ width: 40 }} />
+      </header>
+
+      {/* Sidebar drawer overlay */}
+      {sidebarOpen && (
+        <div className="sidebar-overlay" onClick={() => setSidebarOpen(false)} />
+      )}
+
+      <aside className={`sidebar ${sidebarOpen ? 'sidebar-open' : ''}`}>
         <div className="sidebar-brand">
           <div className="brand-icon">
             <svg viewBox="0 0 32 32" fill="none">
@@ -62,6 +82,7 @@ export default function App() {
             </svg>
           </div>
           <span className="brand-text">TaxSG</span>
+          <button className="sidebar-close" onClick={() => setSidebarOpen(false)} aria-label="Close menu">✕</button>
         </div>
 
         <nav className="sidebar-nav">
@@ -69,7 +90,7 @@ export default function App() {
             <button
               key={item.id}
               className={`nav-item ${activePage === item.id ? 'active' : ''}`}
-              onClick={() => setActivePage(item.id)}
+              onClick={() => handleNavClick(item.id)}
             >
               <span className="nav-icon">{item.icon}</span>
               <span className="nav-label">{item.label}</span>
