@@ -6,12 +6,14 @@ import WhatIfSimulator from './WhatIfSimulator';
 import HouseholdOptimizer from './HouseholdOptimizer';
 import Alerts from './Alerts';
 import Profile from './Profile';
+import TaxFiling from './TaxFiling';
 import './App.css';
 
 const NAV_ITEMS = [
   { id: 'dashboard', label: 'Dashboard', icon: '◎' },
   { id: 'simulator', label: 'What-If', icon: '⟡' },
   { id: 'household', label: 'Household', icon: '⌂' },
+  { id: 'filing', label: 'File Tax', icon: '✦' },
   { id: 'alerts', label: 'Alerts', icon: '◈', badge: 3 },
   { id: 'profile', label: 'Profile', icon: '○' },
 ];
@@ -44,6 +46,7 @@ export default function App() {
       case 'dashboard': return <Dashboard onNavigate={setActivePage} />;
       case 'simulator': return <WhatIfSimulator />;
       case 'household': return <HouseholdOptimizer />;
+      case 'filing': return <TaxFiling />;
       case 'alerts': return <Alerts />;
       case 'profile': return <Profile />;
       default: return <Dashboard onNavigate={setActivePage} />;
@@ -100,12 +103,13 @@ export default function App() {
         </nav>
 
         <div className="sidebar-footer">
-          <div className="user-card">
+          <div className="user-card user-card-clickable" onClick={() => handleNavClick('profile')} title="Go to Profile">
             <div className="user-avatar">WX</div>
             <div className="user-info">
               <span className="user-name">Wen Xiang</span>
               <span className="user-plan">Premium</span>
             </div>
+            <span className="user-card-arrow">›</span>
           </div>
           <button
             className="btn btn-ghost btn-sm"

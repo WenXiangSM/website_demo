@@ -10,15 +10,36 @@ const CONNECTED_SOURCES = [
 ];
 
 const TAX_HISTORY = [
-  { ya: 'YA 2026', income: 122000, reliefs: 48500, tax: 5092, saved: 2965 },
-  { ya: 'YA 2025', income: 112000, reliefs: 42000, tax: 4830, saved: 1200 },
-  { ya: 'YA 2024', income: 105000, reliefs: 38000, tax: 5120, saved: 800 },
-  { ya: 'YA 2023', income: 98000, reliefs: 35000, tax: 4560, saved: 0 },
+  {
+    ya: 'YA 2026', income: 122000, reliefs: 48500, chargeableIncome: 73500,
+    tax: 2127, saved: 2965, status: 'filed', refNo: 'YA2026-4GH9KX',
+    filedOn: '7 Apr 2026', paymentDeadline: '30 Nov 2026', paymentStatus: 'pending',
+    reliefItems: ['Earned Income', 'CPF OA', 'SRS', 'Parent Relief', 'NSman', 'Life Insurance'],
+  },
+  {
+    ya: 'YA 2025', income: 112000, reliefs: 42000, chargeableIncome: 70000,
+    tax: 4830, saved: 1200, status: 'filed', refNo: 'YA2025-2MN7PQ',
+    filedOn: '3 Apr 2025', paymentDeadline: '30 Nov 2025', paymentStatus: 'paid',
+    reliefItems: ['Earned Income', 'CPF OA', 'SRS', 'Parent Relief', 'NSman'],
+  },
+  {
+    ya: 'YA 2024', income: 105000, reliefs: 38000, chargeableIncome: 67000,
+    tax: 5120, saved: 800, status: 'filed', refNo: 'YA2024-8RT3WZ',
+    filedOn: '10 Apr 2024', paymentDeadline: '30 Nov 2024', paymentStatus: 'paid',
+    reliefItems: ['Earned Income', 'CPF OA', 'SRS', 'Parent Relief'],
+  },
+  {
+    ya: 'YA 2023', income: 98000, reliefs: 35000, chargeableIncome: 63000,
+    tax: 4560, saved: 0, status: 'filed', refNo: 'YA2023-6VB1CK',
+    filedOn: '15 Apr 2023', paymentDeadline: '30 Nov 2023', paymentStatus: 'paid',
+    reliefItems: ['Earned Income', 'CPF OA', 'Parent Relief'],
+  },
 ];
 
 export default function Profile() {
   const [activeTab, setActiveTab] = useState('overview');
   const [showManualInput, setShowManualInput] = useState(false);
+  const [expandedRow, setExpandedRow] = useState(null);
 
   return (
     <div>
@@ -224,45 +245,125 @@ export default function Profile() {
           )}
 
           {activeTab === 'history' && (
-            <div className="card">
-              <div className="card-header">
-                <span className="card-title">Tax Filing History</span>
+            <div>
+              {/* Summary bar */}
+              <div className="history-summary-bar">
+                <div className="history-summary-stat">
+                  <div className="history-summary-val">4</div>
+                  <div className="history-summary-lbl">Years Filed</div>
+                </div>
+                <div className="history-summary-divider" />
+                <div className="history-summary-stat">
+                  <div className="history-summary-val">$4,965</div>
+                  <div className="history-summary-lbl">Total Saved via TaxSG</div>
+                </div>
+                <div className="history-summary-divider" />
+                <div className="history-summary-stat">
+                  <div className="history-summary-val">$16,637</div>
+                  <div className="history-summary-lbl">Total Tax Paid</div>
+                </div>
+                <div className="history-summary-divider" />
+                <div className="history-summary-stat">
+                  <div className="history-summary-val accent">All Filed</div>
+                  <div className="history-summary-lbl">Filing Status</div>
+                </div>
               </div>
-              <div className="table-wrapper">
-                <table>
-                  <thead>
-                    <tr>
-                      <th>Year</th>
-                      <th style={{ textAlign: 'right' }}>Income</th>
-                      <th style={{ textAlign: 'right' }}>Reliefs</th>
-                      <th style={{ textAlign: 'right' }}>Tax Paid</th>
-                      <th style={{ textAlign: 'right' }}>Savings via TaxSG</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {TAX_HISTORY.map((row, i) => (
-                      <tr key={i}>
-                        <td style={{ fontWeight: 600 }}>{row.ya}</td>
-                        <td style={{ textAlign: 'right', fontFamily: 'var(--font-mono)' }}>
-                          ${row.income.toLocaleString()}
-                        </td>
-                        <td style={{ textAlign: 'right', fontFamily: 'var(--font-mono)' }}>
-                          ${row.reliefs.toLocaleString()}
-                        </td>
-                        <td style={{ textAlign: 'right', fontFamily: 'var(--font-mono)' }}>
-                          ${row.tax.toLocaleString()}
-                        </td>
-                        <td style={{ textAlign: 'right' }}>
-                          {row.saved > 0 ? (
-                            <span className="tag tag-green">${row.saved.toLocaleString()}</span>
-                          ) : (
-                            <span style={{ fontSize: 12, color: 'var(--text-muted)' }}>—</span>
+
+              {/* Filing cards */}
+              <div className="history-list">
+                {TAX_HISTORY.map((row, i) => (
+                  <div key={i} className="history-card">
+                    <div
+                      className="history-card-header"
+                      onClick={() => setExpandedRow(expandedRow === i ? null : i)}
+                    >
+                      <div className="history-card-left">
+                        <div className="history-ya">{row.ya}</div>
+                        <span className={`history-status-badge ${row.status}`}>
+                          {row.status === 'filed' ? '✓ Filed' : 'Pending'}
+                        </span>
+                        <span className={`history-payment-badge ${row.paymentStatus}`}>
+                          {row.paymentStatus === 'paid' ? '💳 Paid' : '⏳ Payment Due'}
+                        </span>
+                      </div>
+                      <div className="history-card-right">
+                        <div className="history-card-stats">
+                          <div className="history-card-stat">
+                            <div className="history-card-stat-val">${row.income.toLocaleString()}</div>
+                            <div className="history-card-stat-lbl">Income</div>
+                          </div>
+                          <div className="history-card-stat">
+                            <div className="history-card-stat-val">${row.reliefs.toLocaleString()}</div>
+                            <div className="history-card-stat-lbl">Reliefs</div>
+                          </div>
+                          <div className="history-card-stat">
+                            <div className="history-card-stat-val">${row.tax.toLocaleString()}</div>
+                            <div className="history-card-stat-lbl">Tax</div>
+                          </div>
+                          {row.saved > 0 && (
+                            <div className="history-card-stat">
+                              <div className="history-card-stat-val accent">+${row.saved.toLocaleString()}</div>
+                              <div className="history-card-stat-lbl">Saved</div>
+                            </div>
                           )}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+                        </div>
+                        <span className="history-expand-icon">{expandedRow === i ? '▲' : '▼'}</span>
+                      </div>
+                    </div>
+
+                    {expandedRow === i && (
+                      <div className="history-card-detail">
+                        <div className="history-detail-grid">
+                          <div className="history-detail-section">
+                            <div className="history-detail-title">Filing Details</div>
+                            <div className="history-detail-row">
+                              <span>Reference No.</span>
+                              <span className="mono accent">{row.refNo}</span>
+                            </div>
+                            <div className="history-detail-row">
+                              <span>Filed On</span>
+                              <span>{row.filedOn}</span>
+                            </div>
+                            <div className="history-detail-row">
+                              <span>Chargeable Income</span>
+                              <span>${row.chargeableIncome.toLocaleString()}</span>
+                            </div>
+                            <div className="history-detail-row">
+                              <span>Tax Payable</span>
+                              <span>${row.tax.toLocaleString()}</span>
+                            </div>
+                            <div className="history-detail-row">
+                              <span>Payment Deadline</span>
+                              <span>{row.paymentDeadline}</span>
+                            </div>
+                            <div className="history-detail-row">
+                              <span>Payment Status</span>
+                              <span className={row.paymentStatus === 'paid' ? 'positive' : 'warning'}>
+                                {row.paymentStatus === 'paid' ? 'Paid' : 'Pending'}
+                              </span>
+                            </div>
+                          </div>
+                          <div className="history-detail-section">
+                            <div className="history-detail-title">Reliefs Claimed</div>
+                            {row.reliefItems.map((item, j) => (
+                              <div key={j} className="history-detail-row">
+                                <span>{item}</span>
+                                <span className="tag tag-green" style={{ fontSize: 10 }}>✓</span>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                        <div className="history-detail-actions">
+                          <button className="btn btn-ghost btn-sm">⬇ Download NOA</button>
+                          <button className="btn btn-ghost btn-sm">📋 View Full Return</button>
+                          {row.paymentStatus === 'pending' && (
+                            <button className="btn btn-primary btn-sm">Pay Now</button>
+                          )}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                ))}
               </div>
             </div>
           )}

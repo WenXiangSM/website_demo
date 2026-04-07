@@ -224,7 +224,7 @@ function DonutChart() {
   );
 }
 
-export default function Dashboard({ onNavigate }) {
+export default function Dashboard({ onNavigate = () => {} }) {
   const [showSimulation, setShowSimulation] = useState(false);
   const [showManualInput, setShowManualInput] = useState(false);
   const [activeTooltip, setActiveTooltip] = useState(null);
@@ -301,12 +301,20 @@ export default function Dashboard({ onNavigate }) {
             { month: 'Jun', done: true, label: 'Mid-year review' },
             { month: 'Oct', done: false, label: 'SRS top-up window' },
             { month: 'Dec', done: false, label: 'Final SRS deadline' },
-            { month: 'Apr', done: false, label: 'File YA 2026' },
+            { month: 'Apr', done: false, label: 'File YA 2026', action: 'filing' },
           ].map((step, i) => (
-            <div key={i} className={`opt-step ${step.done ? 'done' : 'pending'}`}>
+            <div
+              key={i}
+              className={`opt-step ${step.done ? 'done' : 'pending'} ${step.action ? 'clickable' : ''}`}
+              onClick={() => step.action && onNavigate(step.action)}
+              style={step.action ? { cursor: 'pointer' } : {}}
+            >
               <div className="opt-dot" />
               <span className="opt-month">{step.month}</span>
-              <span className="opt-step-label">{step.label}</span>
+              <span className="opt-step-label">
+                {step.label}
+                {step.action && <span className="opt-step-cta"> →</span>}
+              </span>
             </div>
           ))}
         </div>
