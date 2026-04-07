@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { ManualInputModal } from './Dashboard-2';
 
 const CONNECTED_SOURCES = [
   { name: 'DBS/POSB', type: 'Bank', status: 'connected', lastSync: '2 hours ago' },
@@ -17,9 +18,11 @@ const TAX_HISTORY = [
 
 export default function Profile() {
   const [activeTab, setActiveTab] = useState('overview');
+  const [showManualInput, setShowManualInput] = useState(false);
 
   return (
     <div>
+      {showManualInput && <ManualInputModal onClose={() => setShowManualInput(false)} />}
       <div className="page-header">
         <h1>Profile</h1>
         <p>Manage your account, data connections, and tax history</p>
@@ -163,6 +166,19 @@ export default function Profile() {
           )}
 
           {activeTab === 'connections' && (
+            <div>
+              {/* Manual Input banner for users without SGFinDex */}
+              <div className="manual-input-banner" style={{ marginBottom: 16 }}>
+                <div>
+                  <div style={{ fontWeight: 600, fontSize: 14, marginBottom: 4 }}>No bank account or SGFinDex?</div>
+                  <div style={{ fontSize: 13, color: 'var(--text-secondary)' }}>
+                    Enter your income and relief figures manually to get personalised recommendations.
+                  </div>
+                </div>
+                <button className="btn btn-primary btn-sm" onClick={() => setShowManualInput(true)}>
+                  ✎ Manual Input
+                </button>
+              </div>
             <div className="card">
               <div className="card-header">
                 <span className="card-title">SGFinDex Data Sources</span>
@@ -203,6 +219,7 @@ export default function Profile() {
                   </div>
                 ))}
               </div>
+            </div>
             </div>
           )}
 
