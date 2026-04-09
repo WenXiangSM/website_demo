@@ -295,10 +295,10 @@ export default function Profile({ isOptimised = false }) {
                       <div className="history-card-left">
                         <div className="history-ya">{row.ya}</div>
                         <span className={`history-status-badge ${row.status}`}>
-                          {row.status === 'filed' ? '✓ Filed' : '⏳ Not Yet Optimised'}
+                          {row.status === 'filed' ? '✓ Filed' : '· Not Yet Optimised'}
                         </span>
                         <span className={`history-payment-badge ${row.paymentStatus}`}>
-                          {row.paymentStatus === 'paid' ? '💳 Paid' : '⏳ Payment Due'}
+                          {row.paymentStatus === 'paid' ? '✓ Paid' : '· Payment Due'}
                         </span>
                       </div>
                       <div className="history-card-right">
@@ -369,8 +369,8 @@ export default function Profile({ isOptimised = false }) {
                           </div>
                         </div>
                         <div className="history-detail-actions">
-                          <button className="btn btn-ghost btn-sm">⬇ Download NOA</button>
-                          <button className="btn btn-ghost btn-sm">📋 View Full Return</button>
+                          <button className="btn btn-ghost btn-sm">↓ Download NOA</button>
+                          <button className="btn btn-ghost btn-sm">View Full Return</button>
                           {row.paymentStatus === 'pending' && (
                             <button className="btn btn-primary btn-sm">Pay Now</button>
                           )}

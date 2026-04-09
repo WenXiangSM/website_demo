@@ -7,6 +7,7 @@ import HouseholdOptimizer from './HouseholdOptimizer';
 import Alerts from './Alerts';
 import Profile from './Profile';
 import TaxFiling from './TaxFiling';
+import ReliefGame from './ReliefGame';
 import './App.css';
 
 const NAV_ITEMS = [
@@ -14,7 +15,8 @@ const NAV_ITEMS = [
   { id: 'simulator', label: 'What-If', icon: '⟡' },
   { id: 'household', label: 'Household', icon: '⌂' },
   { id: 'filing', label: 'File Tax', icon: '✦' },
-  { id: 'alerts', label: 'Alerts', icon: '◈', badge: 3 },
+  { id: 'game',   label: 'Learn',   icon: '▷' },
+  { id: 'alerts', label: 'Alerts',  icon: '◈', badge: 3 },
   { id: 'profile', label: 'Profile', icon: '○' },
 ];
 
@@ -53,6 +55,7 @@ export default function App() {
       case 'simulator': return <WhatIfSimulator />;
       case 'household': return <HouseholdOptimizer />;
       case 'filing': return <TaxFiling />;
+      case 'game':   return <ReliefGame />;
       case 'alerts': return <Alerts />;
       case 'profile': return <Profile isOptimised={isOptimised} />;
       default: return <Dashboard onNavigate={setActivePage} isOptimised={isOptimised} onOptimise={() => setIsOptimised(true)} />;
