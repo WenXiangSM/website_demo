@@ -9,13 +9,21 @@ const CONNECTED_SOURCES = [
   { name: 'HSBC', type: 'Bank', status: 'disconnected', lastSync: 'Never' },
 ];
 
-const TAX_HISTORY = [
-  {
-    ya: 'YA 2026', income: 122000, reliefs: 48500, chargeableIncome: 73500,
-    tax: 2127, saved: 2965, status: 'filed', refNo: 'YA2026-4GH9KX',
-    filedOn: '7 Apr 2026', paymentDeadline: '30 Nov 2026', paymentStatus: 'pending',
-    reliefItems: ['Earned Income', 'CPF OA', 'SRS', 'Parent Relief', 'NSman', 'Life Insurance'],
-  },
+// YA 2026 has two states: before and after optimisation
+const YA2026_BEFORE = {
+  ya: 'YA 2026', income: 122000, reliefs: 21400, chargeableIncome: 100600,
+  tax: 5719, saved: 0, status: 'unfiled', refNo: '—',
+  filedOn: '—', paymentDeadline: '30 Nov 2026', paymentStatus: 'pending',
+  reliefItems: ['Earned Income', 'CPF OA'],
+};
+const YA2026_AFTER = {
+  ya: 'YA 2026', income: 122000, reliefs: 57700, chargeableIncome: 64300,
+  tax: 2251, saved: 3468, status: 'filed', refNo: 'YA2026-4GH9KX',
+  filedOn: '8 Apr 2026', paymentDeadline: '30 Nov 2026', paymentStatus: 'pending',
+  reliefItems: ['Earned Income', 'CPF OA', 'SRS', 'Parent Relief', 'NSman', 'Life Insurance', 'QCR'],
+};
+
+const TAX_HISTORY_BASE = [
   {
     ya: 'YA 2025', income: 112000, reliefs: 42000, chargeableIncome: 70000,
     tax: 4830, saved: 1200, status: 'filed', refNo: 'YA2025-2MN7PQ',
@@ -36,10 +44,15 @@ const TAX_HISTORY = [
   },
 ];
 
-export default function Profile() {
+export default function Profile({ isOptimised = false }) {
   const [activeTab, setActiveTab] = useState('overview');
   const [showManualInput, setShowManualInput] = useState(false);
   const [expandedRow, setExpandedRow] = useState(null);
+
+  const ya2026 = isOptimised ? YA2026_AFTER : YA2026_BEFORE;
+  const TAX_HISTORY = [ya2026, ...TAX_HISTORY_BASE];
+  const totalSaved = TAX_HISTORY.reduce((s, r) => s + r.saved, 0);
+  const totalTax   = TAX_HISTORY.reduce((s, r) => s + r.tax,   0);
 
   return (
     <div>
@@ -59,7 +72,7 @@ export default function Profile() {
             <span className="tag tag-green" style={{ marginBottom: 16 }}>Premium Plan</span>
             <div className="profile-stat-row">
               <div className="profile-stat">
-                <div className="profile-stat-val">$4,965</div>
+                <div className="profile-stat-val">${totalSaved.toLocaleString()}</div>
                 <div className="profile-stat-lbl">Total Saved</div>
               </div>
               <div className="profile-stat">
@@ -249,22 +262,24 @@ export default function Profile() {
               {/* Summary bar */}
               <div className="history-summary-bar">
                 <div className="history-summary-stat">
-                  <div className="history-summary-val">4</div>
+                  <div className="history-summary-val">{TAX_HISTORY.filter(r => r.status === 'filed').length}</div>
                   <div className="history-summary-lbl">Years Filed</div>
                 </div>
                 <div className="history-summary-divider" />
                 <div className="history-summary-stat">
-                  <div className="history-summary-val">$4,965</div>
+                  <div className="history-summary-val">${totalSaved.toLocaleString()}</div>
                   <div className="history-summary-lbl">Total Saved via TaxSG</div>
                 </div>
                 <div className="history-summary-divider" />
                 <div className="history-summary-stat">
-                  <div className="history-summary-val">$16,637</div>
+                  <div className="history-summary-val">${totalTax.toLocaleString()}</div>
                   <div className="history-summary-lbl">Total Tax Paid</div>
                 </div>
                 <div className="history-summary-divider" />
                 <div className="history-summary-stat">
-                  <div className="history-summary-val accent">All Filed</div>
+                  <div className={`history-summary-val ${isOptimised ? 'accent' : ''}`}>
+                    {isOptimised ? 'All Filed' : 'YA 2026 Pending'}
+                  </div>
                   <div className="history-summary-lbl">Filing Status</div>
                 </div>
               </div>
@@ -280,7 +295,7 @@ export default function Profile() {
                       <div className="history-card-left">
                         <div className="history-ya">{row.ya}</div>
                         <span className={`history-status-badge ${row.status}`}>
-                          {row.status === 'filed' ? '✓ Filed' : 'Pending'}
+                          {row.status === 'filed' ? '✓ Filed' : '⏳ Not Yet Optimised'}
                         </span>
                         <span className={`history-payment-badge ${row.paymentStatus}`}>
                           {row.paymentStatus === 'paid' ? '💳 Paid' : '⏳ Payment Due'}

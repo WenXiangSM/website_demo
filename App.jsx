@@ -23,6 +23,12 @@ export default function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [activePage, setActivePage] = useState('dashboard');
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [isOptimised, setIsOptimised] = useState(false);
+
+  const handleLogout = () => {
+    setIsLoggedIn(false);
+    setIsOptimised(false); // reset on logout so next login starts fresh
+  };
 
   if (!isLoggedIn) {
     if (authPage === 'signup') {
@@ -43,13 +49,13 @@ export default function App() {
 
   const renderPage = () => {
     switch (activePage) {
-      case 'dashboard': return <Dashboard onNavigate={setActivePage} />;
+      case 'dashboard': return <Dashboard onNavigate={setActivePage} isOptimised={isOptimised} onOptimise={() => setIsOptimised(true)} />;
       case 'simulator': return <WhatIfSimulator />;
       case 'household': return <HouseholdOptimizer />;
       case 'filing': return <TaxFiling />;
       case 'alerts': return <Alerts />;
-      case 'profile': return <Profile />;
-      default: return <Dashboard onNavigate={setActivePage} />;
+      case 'profile': return <Profile isOptimised={isOptimised} />;
+      default: return <Dashboard onNavigate={setActivePage} isOptimised={isOptimised} onOptimise={() => setIsOptimised(true)} />;
     }
   };
 
@@ -114,7 +120,7 @@ export default function App() {
           <button
             className="btn btn-ghost btn-sm"
             style={{ width: '100%', justifyContent: 'center', marginTop: 8, color: 'var(--text-muted)', fontSize: 12 }}
-            onClick={() => setIsLoggedIn(false)}
+            onClick={handleLogout}
           >
             Sign out
           </button>

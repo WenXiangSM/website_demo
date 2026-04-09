@@ -2788,3 +2788,128 @@ tr:hover td {
   .manual-input-banner { flex-direction: column; align-items: flex-start; }
   .form-row-2 { grid-template-columns: 1fr; }
 }
+
+/* ═══════════════ OPTIMISE BANNER ═══════════════ */
+.optimise-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px 20px;
+  background: rgba(248, 113, 113, 0.08);
+  border: 1px solid rgba(248, 113, 113, 0.3);
+  border-radius: var(--radius-md);
+  margin-bottom: 20px;
+}
+.optimise-banner-left {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+.optimise-banner-icon {
+  width: 32px;
+  height: 32px;
+  min-width: 32px;
+  border-radius: 50%;
+  background: var(--danger-dim);
+  border: 1px solid rgba(248, 113, 113, 0.4);
+  color: var(--danger);
+  font-weight: 700;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.optimise-banner-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--danger);
+  margin-bottom: 4px;
+}
+.optimise-banner-sub {
+  font-size: 12px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+/* ─── Success banner ─── */
+.optimise-success-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 16px 20px;
+  background: rgba(45, 212, 191, 0.08);
+  border: 1px solid rgba(45, 212, 191, 0.3);
+  border-radius: var(--radius-md);
+  margin-bottom: 20px;
+}
+.optimise-success-icon {
+  width: 32px;
+  height: 32px;
+  min-width: 32px;
+  border-radius: 50%;
+  background: var(--accent-dim);
+  border: 1px solid rgba(45, 212, 191, 0.4);
+  color: var(--accent);
+  font-weight: 700;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.optimise-success-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--accent);
+  margin-bottom: 4px;
+}
+.optimise-success-sub {
+  font-size: 12px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+/* ─── Accent button ─── */
+.btn-accent {
+  background: linear-gradient(135deg, var(--accent), #60a5fa);
+  color: var(--bg-primary);
+  font-weight: 700;
+  border: none;
+}
+.btn-accent:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgba(45, 212, 191, 0.35);
+}
+.btn-accent:disabled { opacity: 0.6; transform: none; cursor: not-allowed; }
+.btn-lg { padding: 12px 28px; font-size: 14px; }
+.btn-loading { animation: pulse-btn 1s ease-in-out infinite; }
+@keyframes pulse-btn {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.65; }
+}
+
+/* ─── Recommendations "all done" state ─── */
+.rec-all-done {
+  text-align: center;
+  padding: 32px 20px;
+  color: var(--text-secondary);
+}
+
+/* ─── Relief bar empty state ─── */
+.relief-bar-fill.empty {
+  background: var(--danger-dim);
+  border: 1px dashed rgba(248, 113, 113, 0.4);
+}
+
+/* ─── Profile history unfiled badge ─── */
+.history-status-badge.unfiled {
+  background: var(--danger-dim);
+  color: var(--danger);
+  border-color: rgba(248, 113, 113, 0.3);
+}
+
+@media (max-width: 600px) {
+  .optimise-banner { flex-direction: column; align-items: flex-start; }
+  .optimise-success-banner { flex-direction: column; }
+}
